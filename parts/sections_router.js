@@ -1,5 +1,5 @@
 const express = require("express")
-const db = require("./parts_model")
+const db = require("./sections_model")
 
 const router = express.Router()
 
@@ -13,13 +13,13 @@ router.get("/", async (req, res, next) => {
 
 router.get("/:id", async(req,res,next)=> {
 	try {
-		const part = await db.findById(req.params.id)
-		if (!part) {
+		const section = await db.findById(req.params.id)
+		if (!section) {
 			return res.status(404).json({
-				message: "Part not found."
+				message: "Section not found."
 			})
 		} else {
-			return res.status(200).json(part)
+			return res.status(200).json(section)
 		}
 	} catch (err) {
 		next(err)
