@@ -4,22 +4,31 @@ function find() {
 	return db("sections")
 }
 
-function findById(section_no) {
-	return db("sections").where({ section_no }).first()
+function findById(id) {
+	return db("sections").where({ id }).first()
+}
+
+function findPartsBySection(id) {
+  return db("parts").select("parts.part_no","parts.part_name","parts.quantity","sections.section_no","sections.section_name").join("sections", {"parts.section_id":"sections.id"}).where("parts.section_id",id)
 }
 
 async function create(data) {
-	const [section_no] = await db("sections").insert(data)
-	return findById(section_no)
+	const [id] = await db("sections").insert(data)
+	return findById(id)
 }
 
-async function update(section_no, data) {
-	await db("sections").where({ section_no }).update(data)
-	return findById(section_no)
+async function update(id, data) {
+	await db("sections").where({ id }).update(data)
+	return findById(id)
 }
 
-function remove(section_no) {
-	return db("sections").where({ section_no }).del()
+function remove(id) {
+	return db("sections").where({ id }).del()
+}
+
+async function createPartInSection(section_id,data) {
+	const [id] = await db("parts").insert(data)
+	return db("parts").where({ id }).first()
 }
 
 module.exports = {
@@ -28,4 +37,6 @@ module.exports = {
 	create,
 	update,
 	remove,
+  findPartsBySection,
+  createPartInSection,
 }
